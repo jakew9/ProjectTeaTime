@@ -32,6 +32,36 @@ const questions = [
       { text: "A warm, roasted embrace", tags: ["Smoky", "Rich"] },
       { text: "A deep, savory depth", tags: ["Umami", "Rich"] }
     ]
+  },
+  {
+    id: 4,
+    question: "What's your ideal morning ritual?",
+    options: [
+      { text: "Strong, dark coffee and a newspaper", tags: ["Bold", "Smoky"] },
+      { text: "A bowl of fresh berries and yogurt", tags: ["Sweet", "Clean"] },
+      { text: "Miso soup and steamed rice", tags: ["Umami", "Rich"] },
+      { text: "A quiet walk in a misty garden", tags: ["Delicate", "Floral"] }
+    ]
+  },
+  {
+    id: 5,
+    question: "Which texture do you find most satisfying?",
+    options: [
+      { text: "Velvety and mouth-coating", tags: ["Rich", "Umami"] },
+      { text: "Crisp and effervescent", tags: ["Clean", "Astringent"] },
+      { text: "Light and airy", tags: ["Delicate", "Sweet"] },
+      { text: "Robust and textured", tags: ["Bold", "Smoky"] }
+    ]
+  },
+  {
+    id: 6,
+    question: "Close your eyes. What scent fills the air?",
+    options: [
+      { text: "A crackling wood fire", tags: ["Smoky", "Bold"] },
+      { text: "Blooming jasmine on a breeze", tags: ["Floral", "Delicate"] },
+      { text: "Damp earth after rain", tags: ["Umami", "Astringent"] },
+      { text: "Caramelizing sugar", tags: ["Sweet", "Rich"] }
+    ]
   }
 ];
 
