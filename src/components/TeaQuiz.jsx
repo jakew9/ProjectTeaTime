@@ -148,35 +148,38 @@ export default function TeaQuiz() {
   const [teaScores, setTeaScores] = useState(
     teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {})
   );
-  const [history, setHistory] = useState([teaData.map(t => t.id)]);
+  const [maxPossibleScore, setMaxPossibleScore] = useState(0);
+  const [history, setHistory] = useState([{ pool: teaData.map(t => t.id), maxScore: 0 }]);
   const [result, setResult] = useState(null);
 
-  const currentPoolIds = history[history.length - 1];
+  const currentPoolIds = history[history.length - 1].pool;
 
   const handleAnswer = (selectedTags) => {
-    // 1. Calculate Weighted Scores for all 140 teas
+    // 1. Calculate Weighted Scores and track potential max
     const newScores = { ...teaScores };
+    let questionMax = 0;
+    
+    selectedTags.forEach(tag => {
+      questionMax += TAG_WEIGHTS[tag] || 1;
+    });
+
+    const newMaxPossible = maxPossibleScore + questionMax;
+    setMaxPossibleScore(newMaxPossible);
+
     teaData.forEach(tea => {
       const matches = tea.tags.filter(tag => selectedTags.includes(tag));
       matches.forEach(tag => {
-        // Apply Anchor weighting (2) vs Structural weighting (1)
         newScores[tea.id] += TAG_WEIGHTS[tag] || 1; 
       });
     });
     setTeaScores(newScores);
 
-    // 2. Dynamic Threshold Pruning (Claude & Gemini Consensus)
-    // Find the current leader in the pool to set the pace.
+    // 2. Dynamic Threshold Pruning
     const currentMaxScore = Math.max(...currentPoolIds.map(id => newScores[id]));
-    
-    // Threshold: Teas must maintain at least 40% of the leader's score.
-    // This allows the curve to "breathe" based on user consistency.
     const dynamicThreshold = currentMaxScore * 0.40;
 
     let nextPoolIds = currentPoolIds.filter(id => newScores[id] >= dynamicThreshold);
 
-    // 3. The Sanctuary Floor
-    // Ensure we never prune so aggressively that the journey ends too early.
     if (nextPoolIds.length < 12) {
       nextPoolIds = [...currentPoolIds]
         .sort((a, b) => newScores[b] - newScores[a])
@@ -185,7 +188,7 @@ export default function TeaQuiz() {
       nextPoolIds.sort((a, b) => newScores[b] - newScores[a]);
     }
 
-    const newHistory = [...history, nextPoolIds];
+    const newHistory = [...history, { pool: nextPoolIds, maxScore: newMaxPossible }];
     setHistory(newHistory);
 
     if (currentStep < questions.length - 1) {
@@ -193,14 +196,20 @@ export default function TeaQuiz() {
     } else {
       const finalTeas = teaData
         .filter(t => nextPoolIds.includes(t.id))
-        .sort((a, b) => newScores[b] - newScores[a]);
+        .map(tea => ({
+          ...tea,
+          matchPercent: Math.round((newScores[tea.id] / newMaxPossible) * 100)
+        }))
+        .sort((a, b) => b.matchPercent - a.matchPercent);
       setResult(finalTeas);
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
+      const previousState = history[history.length - 2];
       setCurrentStep(currentStep - 1);
+      setMaxPossibleScore(previousState.maxScore);
       setHistory(history.slice(0, -1));
     }
   };
@@ -208,7 +217,8 @@ export default function TeaQuiz() {
   const resetQuiz = () => {
     setCurrentStep(0);
     setTeaScores(teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {}));
-    setHistory([teaData.map(t => t.id)]);
+    setMaxPossibleScore(0);
+    setHistory([{ pool: teaData.map(t => t.id), maxScore: 0 }]);
     setResult(null);
   };
 
@@ -266,32 +276,59 @@ export default function TeaQuiz() {
           >
             <div className="text-center space-y-4">
               <h2 className="text-4xl md:text-5xl font-serif text-cream">Your Personal Sanctuary</h2>
-              <p className="text-cream/40 font-body">We've discovered {result.length} teas that align with your palette:</p>
+              <p className="text-cream/40 font-body">We've discovered {result.length} teas that align with your palette.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
-              {result.map((tea) => (
-                <div 
-                  key={tea.id}
-                  className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-serif text-cream group-hover:text-white transition-colors">{tea.name}</h3>
-                    <span className="text-[10px] uppercase tracking-widest px-2 py-1 rounded bg-cream/10 text-cream/60 font-body">
-                      {tea.type}
-                    </span>
+            {/* Top 5 Section */}
+            <section className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <div className="h-px flex-grow bg-cream/10" />
+                <h3 className="text-xs uppercase tracking-[0.3em] text-cream/60 font-body">Top 5 Soul Matches</h3>
+                <div className="h-px flex-grow bg-cream/10" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                {result.slice(0, 5).map((tea, idx) => (
+                  <div 
+                    key={tea.id}
+                    className="p-5 rounded-2xl bg-cream/5 border border-cream/20 hover:border-cream/40 transition-all group relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 w-1 h-full bg-cream/20 group-hover:bg-cream transition-colors" />
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-[10px] text-cream/30 font-bold">MATCH 0{idx + 1}</span>
+                      <span className="text-[10px] text-cream/80 font-bold bg-cream/10 px-1.5 py-0.5 rounded">{tea.matchPercent}%</span>
+                    </div>
+                    <h3 className="text-lg font-serif text-cream mb-1 leading-tight">{tea.name}</h3>
+                    <p className="text-[10px] uppercase tracking-widest text-cream/40 mb-3">{tea.type}</p>
+                    <p className="text-xs text-cream/60 italic leading-relaxed">"{tea.notes}"</p>
                   </div>
-                  <p className="text-sm text-cream/40 mb-4 italic font-body">"{tea.notes}"</p>
-                  <div className="flex flex-wrap gap-2">
-                    {tea.tags.map(tag => (
-                      <span key={tag} className="text-[9px] text-cream/30 border border-cream/10 px-2 py-0.5 rounded-full uppercase tracking-widest font-body">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Remaining Teas Section */}
+            {result.length > 5 && (
+              <section className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <div className="h-px flex-grow bg-cream/5" />
+                  <h3 className="text-xs uppercase tracking-[0.3em] text-cream/30 font-body">Other Compatible Finds</h3>
+                  <div className="h-px flex-grow bg-cream/5" />
                 </div>
-              ))}
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+                  {result.slice(5).map((tea) => (
+                    <div 
+                      key={tea.id}
+                      className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
+                    >
+                      <div className="flex justify-between items-start mb-1">
+                        <h4 className="text-sm font-serif text-cream/80 group-hover:text-white transition-colors">{tea.name}</h4>
+                        <span className="text-[8px] font-bold text-cream/60">{tea.matchPercent}%</span>
+                      </div>
+                      <p className="text-[10px] text-cream/30 italic">"{tea.notes}"</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             <div className="text-center pb-8">
               <button
