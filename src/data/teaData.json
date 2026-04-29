@@ -1,0 +1,37 @@
+[
+  {
+    "id": "hojicha",
+    "name": "Hojicha",
+    "tags": ["Rich", "Smoky", "Umami"],
+    "foodiePairing": "Perfect with toasted sourdough, dark chocolate, or roasted chestnuts. Its roasted profile complements savory brunch dishes beautifully.",
+    "description": "A Japanese green tea that is roasted in a porcelain pot over charcoal, resulting in a unique toasty aroma and low caffeine content."
+  },
+  {
+    "id": "lapsang-souchong",
+    "name": "Lapsang Souchong",
+    "tags": ["Smoky", "Bold", "Rich"],
+    "foodiePairing": "Pairs excellently with smoked salmon, sharp cheddar, or even a spicy BBQ dish. It is the Scotch of the tea world.",
+    "description": "An ancient black tea smoke-dried over pinewood fires, offering an unmistakable campfire aroma and deep, resinous sweetness."
+  },
+  {
+    "id": "sencha",
+    "name": "Sencha",
+    "tags": ["Umami", "Astringent", "Clean"],
+    "foodiePairing": "Ideal with fresh sushi, lemon-glazed shortbread, or steamed seasonal greens. The 'clean snap' of its finish refreshes the palate.",
+    "description": "The quintessential Japanese green tea, prized for its vibrant color, grassy sweetness, and refreshing astringency."
+  },
+  {
+    "id": "silver-needle",
+    "name": "Silver Needle",
+    "tags": ["Delicate", "Sweet", "Floral"],
+    "foodiePairing": "Best with light almond cakes, fresh white peaches, or mild goat cheese. Its subtle profile requires delicate companions.",
+    "description": "A premium white tea made only from unopened buds, offering a silky texture and light, honey-like sweetness."
+  },
+  {
+    "id": "tie-guan-yin",
+    "name": "Tie Guan Yin",
+    "tags": ["Floral", "Rich", "Umami"],
+    "foodiePairing": "Complements buttery croissants, fruit tarts, or lightly salted macadamias. Its floral depth stands up well to pastry.",
+    "description": "A legendary Oolong tea with a captivating orchid aroma and a lingering, creamy finish that evolves through multiple infusions."
+  }
+]

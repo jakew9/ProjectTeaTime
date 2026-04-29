@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Lora', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #062c16;
+  color: #faf8f5;
+  overflow-x: hidden;
+}
+
+/* Headings use Cormorant Garamond */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Loading bar glow effect */
+.loading-bar {
+  box-shadow: 0 0 10px rgba(212, 165, 116, 0.5),
+              0 0 20px rgba(212, 165, 116, 0.3);
+}
+
+/* Water effect gradient */
+.water-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 74, 94, 0.95) 0%,
+    rgba(26, 74, 94, 0.85) 50%,
+    rgba(26, 74, 94, 0.7) 100%
+  );
+}
+
+/* Water wave effect */
+.water-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-5px) scaleY(0.8); }
+}
+
+/* Zen background overlay */
+.zen-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+/* Tea menu item hover effect */
+.tea-item {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tea-item:hover {
+  transform: translateY(-4px);
+}
+
+.tea-item:hover .tea-icon {
+  transform: scale(1.1);
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(167, 196, 160, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(167, 196, 160, 0.6);
+}
+
+/* Focus states for accessibility */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(167, 196, 160, 0.6);
+  outline-offset: 4px;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }

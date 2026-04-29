@@ -1,0 +1,97 @@
+export const teas = {
+  white: {
+    name: 'White Tea',
+    color: '#f5ebe0',
+    tagline: 'The purest expression of the tea leaf',
+    history: `White tea is the least processed of all teas, with origins dating back to the Tang Dynasty (618-907 AD) in China. It was once reserved exclusively for Chinese royalty, who believed its delicate nature embodied purity and elegance. The tradition of white tea production became refined in Fujian province during the Qing Dynasty, where farmers developed techniques to preserve the tea's natural sweetness and subtle floral notes.`,
+    origin: 'Fujian Province, China',
+    originDescription: 'The misty mountains of Fujian, particularly the Fuding and Zhenghe counties, provide the ideal climate for white tea cultivation. Cool temperatures, abundant rainfall, and mineral-rich soil create leaves of exceptional tenderness.',
+    processing: 'Minimal processing — leaves are simply withered and dried naturally in sunlight or controlled indoor environments, preserving their delicate silver-white appearance.',
+    flavor: 'Light, sweet, and subtly floral with notes of honey, melon, and fresh hay.',
+    bestExamples: [
+      { name: 'Silver Needle (Bai Hao Yin Zhen)', description: 'Made exclusively from unopened buds, covered in fine white hairs' },
+      { name: 'White Peony (Bai Mu Dan)', description: 'A fuller-bodied white tea using buds and young leaves' },
+      { name: 'Shou Mei', description: 'A bolder, more oxidized white tea with earthy notes' },
+      { name: 'Moonlight White', description: 'A unique Yunnan white tea dried under moonlight' },
+    ],
+    brewingTips: 'Use water at 75-85°C (167-185°F). Steep for 2-3 minutes. These delicate leaves can be infused multiple times.',
+  },
+
+  green: {
+    name: 'Green Tea',
+    color: '#a7c4a0',
+    tagline: 'Ancient wisdom in every cup',
+    history: `Green tea has been consumed in China for over 4,000 years, making it one of humanity's oldest prepared beverages. Legend attributes its discovery to Emperor Shen Nung in 2737 BC, when tea leaves accidentally blew into his pot of boiling water. The practice spread to Japan in the 9th century through Buddhist monks, evolving into the renowned Japanese tea ceremony. Today, green tea remains central to both Chinese and Japanese culture.`,
+    origin: 'China and Japan',
+    originDescription: 'China\'s Zhejiang, Anhui, and Jiangsu provinces produce renowned green teas, while Japan\'s Shizuoka, Uji, and Kagoshima regions are celebrated for their distinctive steamed varieties.',
+    processing: 'Leaves are quickly heated after picking — pan-fired in China or steamed in Japan — to prevent oxidation and preserve their vibrant green color and fresh flavor.',
+    flavor: 'Vegetal, grassy, and refreshing with notes ranging from chestnut and seaweed to fresh spring flowers.',
+    bestExamples: [
+      { name: 'Dragon Well (Longjing)', description: 'China\'s most famous green tea, pan-fired with a distinctive flat shape' },
+      { name: 'Gyokuro', description: 'Japan\'s shade-grown premium tea with intense umami' },
+      { name: 'Sencha', description: 'Japan\'s most popular tea, bright and grassy' },
+      { name: 'Bi Luo Chun', description: 'Delicate spiral leaves with a fruity, floral character' },
+      { name: 'Matcha', description: 'Stone-ground shade-grown tea, the heart of Japanese tea ceremony' },
+    ],
+    brewingTips: 'Use water at 70-80°C (158-176°F). Steep for 1-2 minutes. Higher temperatures will make the tea bitter.',
+  },
+
+  oolong: {
+    name: 'Oolong Tea',
+    color: '#d4a574',
+    tagline: 'Where art meets nature',
+    history: `Oolong tea, meaning "black dragon" in Chinese, emerged during the Ming Dynasty (1368-1644) in the Wuyi Mountains of Fujian province. The complex oxidation process was discovered when a tea farmer was distracted from his work, allowing his leaves to partially oxidize before firing. This happy accident created a new category of tea that spans the spectrum between green and black. Taiwan later developed its own distinguished oolong tradition.`,
+    origin: 'Fujian Province, China and Taiwan',
+    originDescription: 'The rocky Wuyi Mountains produce the famous "rock teas" with their distinctive mineral character, while Taiwan\'s high-altitude gardens in Alishan and Li Shan create lighter, floral oolongs.',
+    processing: 'Partially oxidized (15-85%), oolong processing involves repeated rolling and oxidation cycles that develop complex flavors and the characteristic tightly rolled or twisted leaf shapes.',
+    flavor: 'Incredibly diverse — from light and floral to rich and roasted, with notes of orchid, honey, stone fruit, or toasted grain.',
+    bestExamples: [
+      { name: 'Da Hong Pao (Big Red Robe)', description: 'The legendary rock tea of Wuyi, rich and mineral' },
+      { name: 'Tie Guan Yin (Iron Goddess)', description: 'Floral and creamy from Anxi, one of China\'s most beloved teas' },
+      { name: 'Dong Ding', description: 'Taiwan\'s traditional roasted oolong with a smooth, nutty character' },
+      { name: 'Ali Shan High Mountain', description: 'Light and buttery with exquisite floral notes' },
+      { name: 'Oriental Beauty', description: 'Honey-sweet tea created through insect interaction' },
+    ],
+    brewingTips: 'Use water at 85-95°C (185-203°F). Steep for 3-5 minutes. Oolongs are perfect for multiple infusions, revealing new flavors each time.',
+  },
+
+  black: {
+    name: 'Black Tea',
+    color: '#b57a5d',
+    tagline: 'Bold character, refined tradition',
+    history: `Black tea (called "red tea" in China for its amber liquor) developed in Fujian province during the 17th century. The fully oxidized tea was better suited for long-distance trade, leading to its spread across the world via Dutch and British merchants. It became the foundation of British tea culture and the Indian tea industry, which the British established in the 1830s using plants smuggled from China to Assam and Darjeeling.`,
+    origin: 'China, India, Sri Lanka, and Kenya',
+    originDescription: 'Each region imparts distinct character: China\'s Yunnan and Fujian produce mellow, honeyed teas; India\'s Darjeeling offers muscatel notes while Assam delivers malty strength; Sri Lanka\'s Ceylon teas are bright and brisk.',
+    processing: 'Fully oxidized, black tea leaves are withered, rolled to break cell walls, allowed to oxidize completely until dark, then fired to stop the process and develop robust flavors.',
+    flavor: 'Rich, malty, and full-bodied with notes ranging from cocoa and dried fruit to muscatel and spice.',
+    bestExamples: [
+      { name: 'Keemun', description: 'China\'s most famous black tea, smooth with wine and orchid notes' },
+      { name: 'Darjeeling First Flush', description: 'The "champagne of teas" with delicate muscatel character' },
+      { name: 'Assam Golden Tips', description: 'Malty and robust, the foundation of English breakfast' },
+      { name: 'Lapsang Souchong', description: 'Pine-smoked tea with a distinctive campfire character' },
+      { name: 'Dian Hong (Yunnan Gold)', description: 'Sweet and mellow with honey and cocoa notes' },
+    ],
+    brewingTips: 'Use water at 90-100°C (194-212°F). Steep for 3-5 minutes. Black tea is robust enough to enjoy with milk.',
+  },
+
+  herbal: {
+    name: 'Herbal Infusions',
+    color: '#c9a7c7',
+    tagline: 'Nature\'s gentle remedies',
+    history: `While technically not "true" teas (which come from Camellia sinensis), herbal infusions have been used for thousands of years across cultures. Ancient Egyptians used chamomile and peppermint, Chinese medicine incorporated chrysanthemum and goji berries, and indigenous peoples worldwide developed healing tisanes from local botanicals. These caffeine-free infusions offer both wellness benefits and pure enjoyment.`,
+    origin: 'Worldwide',
+    originDescription: 'From the chamomile fields of Egypt to the rooibos farms of South Africa, the lavender fields of Provence to the mint gardens of Morocco — herbal infusions connect us to healing traditions from every corner of the world.',
+    processing: 'Varies by ingredient — flowers, leaves, roots, bark, and fruits may be dried, fermented, or used fresh. Each botanical requires specific handling to preserve its beneficial compounds and flavor.',
+    flavor: 'Endlessly varied — calming floral notes, refreshing mints, warming spices, or fruity sweetness, all naturally caffeine-free.',
+    bestExamples: [
+      { name: 'Chamomile', description: 'Golden flowers offering gentle, apple-like sweetness and calm' },
+      { name: 'Rooibos', description: 'South African "red bush" tea, naturally sweet and nutty' },
+      { name: 'Peppermint', description: 'Cooling and refreshing, perfect for digestion' },
+      { name: 'Hibiscus', description: 'Ruby-red and tangy, rich in vitamin C' },
+      { name: 'Chrysanthemum', description: 'Delicate Chinese flowers for clarity and cooling' },
+    ],
+    brewingTips: 'Use freshly boiled water. Steep for 5-7 minutes or longer — herbal infusions don\'t become bitter with extended steeping.',
+  },
+}
+
+export const teaTypes = ['white', 'green', 'oolong', 'black', 'herbal']
