@@ -1,147 +1,200 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import teaData from '../data/teaData.json';
+
+const TAG_WEIGHTS = {
+  // Anchor Tags: Polarizing or identity-defining (Score: 2)
+  "Smoky": 2,
+  "Umami": 2,
+  "Mineral": 2,
+  "Cooling": 2,
+  "Spicy": 2,
+  "Grassy": 2,
+  "Malty": 2,
+  "Roasted": 2,
+  
+  // Structural Tags: Supporting texture and body (Score: 1)
+  "Bold": 1,
+  "Clean": 1,
+  "Fresh": 1,
+  "Light": 1,
+  "Delicate": 1,
+  "Floral": 1,
+  "Sweet": 1,
+  "Honey": 1,
+  "Rich": 1,
+  "Creamy": 1,
+  "Earthy": 1,
+  "Savory": 1,
+  "Astringent": 1,
+  "Fruity": 1
+};
 
 const questions = [
   {
     id: 1,
-    question: "Which bakery treat calls your name?",
+    question: "What's your ideal morning ritual?",
     options: [
-      { text: "Flaky, buttery croissant", tags: ["Rich", "Sweet"] },
-      { text: "Dark chocolate rye bread", tags: ["Smoky", "Bold", "Rich"] },
-      { text: "Lemon-glazed shortbread", tags: ["Clean", "Light", "Astringent"] },
-      { text: "Almond macaron", tags: ["Floral", "Delicate", "Sweet"] },
-      { text: "Savory scallion pancake", tags: ["Umami", "Savory", "Fresh"] }
+      { text: "Strong, dark coffee and a newspaper", tags: ["Bold", "Rich", "Earthy"] },
+      { text: "A bowl of fresh berries and yogurt", tags: ["Sweet", "Clean", "Light", "Fresh"] },
+      { text: "Steamed rice and warm broth", tags: ["Umami", "Rich", "Earthy"] },
+      { text: "A quiet walk in a misty garden", tags: ["Delicate", "Floral", "Fresh", "Light"] },
+      { text: "Hot water with lemon and honey", tags: ["Clean", "Fresh", "Sweet", "Honey"] }
     ]
   },
   {
     id: 2,
-    question: "What's your preferred evening entree?",
+    question: "What's your favorite weather for a walk?",
     options: [
-      { text: "Smoked brisket with BBQ sauce", tags: ["Smoky", "Bold", "Rich"] },
-      { text: "Fresh Sashimi platter", tags: ["Clean", "Fresh", "Umami"] },
-      { text: "Creamy mushroom risotto", tags: ["Rich", "Umami", "Savory"] },
-      { text: "Spicy Thai green curry", tags: ["Spicy", "Bold", "Fresh"] },
-      { text: "Roasted root vegetables", tags: ["Earthy", "Roasted", "Sweet"] }
+      { text: "Hot and tropical", tags: ["Fruity", "Fresh", "Sweet", "Floral"] },
+      { text: "Crisp, cold winter air", tags: ["Clean", "Astringent", "Bold"] },
+      { text: "Misty and mysterious", tags: ["Earthy", "Delicate", "Rich"] },
+      { text: "Golden afternoon sun", tags: ["Floral", "Honey", "Light", "Sweet"] },
+      { text: "A stormy, dark sky", tags: ["Bold", "Rich", "Earthy"] }
     ]
   },
   {
     id: 3,
-    question: "How do you like a meal to finish?",
+    question: "Which texture do you find most satisfying?",
     options: [
-      { text: "A clean, refreshing snap", tags: ["Clean", "Astringent"] },
-      { text: "A lingering, silky sweetness", tags: ["Sweet", "Delicate", "Light"] },
-      { text: "A warm, roasted embrace", tags: ["Roasted", "Smoky", "Rich"] },
-      { text: "A deep, savory depth", tags: ["Umami", "Savory", "Bold"] },
-      { text: "A bright, citrusy zing", tags: ["Fresh", "Astringent", "Clean"] }
+      { text: "Velvety and mouth-coating", tags: ["Rich", "Creamy", "Sweet"] },
+      { text: "Crisp and effervescent", tags: ["Clean", "Astringent", "Fresh", "Light"] },
+      { text: "Light and airy", tags: ["Delicate", "Light", "Floral", "Fresh"] },
+      { text: "Robust and thick", tags: ["Bold", "Earthy", "Rich"] },
+      { text: "Smooth and restorative", tags: ["Sweet", "Fresh", "Clean"] }
     ]
   },
   {
     id: 4,
-    question: "What's your ideal morning ritual?",
+    question: "What's your preferred evening entree?",
     options: [
-      { text: "Strong, dark coffee and a newspaper", tags: ["Bold", "Smoky", "Rich"] },
-      { text: "A bowl of fresh berries and yogurt", tags: ["Sweet", "Clean", "Light"] },
-      { text: "Miso soup and steamed rice", tags: ["Umami", "Savory", "Rich"] },
-      { text: "A quiet walk in a misty garden", tags: ["Delicate", "Floral", "Fresh"] },
-      { text: "Hot water with lemon and honey", tags: ["Clean", "Fresh", "Sweet"] }
+      { text: "Smoked brisket with BBQ sauce", tags: ["Smoky", "Bold", "Rich"] },
+      { text: "Fresh Sashimi platter", tags: ["Clean", "Fresh", "Umami", "Light"] },
+      { text: "Creamy mushroom risotto", tags: ["Creamy", "Rich", "Earthy", "Umami"] },
+      { text: "Spicy Thai green curry", tags: ["Bold", "Fresh", "Astringent", "Earthy"] },
+      { text: "Roasted root vegetables", tags: ["Roasted", "Earthy", "Sweet", "Bold"] }
     ]
   },
   {
     id: 5,
-    question: "Which texture do you find most satisfying?",
+    question: "Which fruit do you crave most?",
     options: [
-      { text: "Velvety and mouth-coating", tags: ["Rich", "Creamy", "Umami"] },
-      { text: "Crisp and effervescent", tags: ["Clean", "Astringent", "Fresh"] },
-      { text: "Light and airy", tags: ["Delicate", "Light", "Floral"] },
-      { text: "Robust and textured", tags: ["Bold", "Earthy", "Roasted"] },
-      { text: "Cooling and smooth", tags: ["Cooling", "Sweet", "Fresh"] }
+      { text: "Dark, ripe cherries", tags: ["Rich", "Sweet", "Fruity", "Bold"] },
+      { text: "Tart green apples", tags: ["Astringent", "Clean", "Fresh", "Light"] },
+      { text: "Creamy white peaches", tags: ["Floral", "Sweet", "Delicate", "Light"] },
+      { text: "Exotic lychee or mango", tags: ["Fruity", "Honey", "Fresh", "Floral"] },
+      { text: "Sun-dried figs", tags: ["Earthy", "Rich", "Sweet"] }
     ]
   },
   {
     id: 6,
-    question: "Close your eyes. What scent fills the air?",
+    question: "Which bakery treat calls your name?",
     options: [
-      { text: "A crackling wood fire", tags: ["Smoky", "Bold", "Roasted"] },
-      { text: "Blooming jasmine on a breeze", tags: ["Floral", "Delicate", "Fresh"] },
-      { text: "Damp earth after rain", tags: ["Earthy", "Umami", "Astringent"] },
-      { text: "Caramelizing sugar", tags: ["Sweet", "Rich", "Malty"] },
-      { text: "Freshly cut grass", tags: ["Grassy", "Fresh", "Clean"] }
+      { text: "Flaky, buttery croissant", tags: ["Rich", "Creamy", "Sweet", "Light"] },
+      { text: "Dark chocolate rye bread", tags: ["Bold", "Rich", "Earthy", "Roasted"] },
+      { text: "Lemon-glazed shortbread", tags: ["Clean", "Light", "Fresh", "Sweet"] },
+      { text: "Almond macaron", tags: ["Floral", "Delicate", "Sweet", "Fresh"] },
+      { text: "Toasted sesame flatbread", tags: ["Roasted", "Umami", "Bold"] }
     ]
   },
   {
     id: 7,
-    question: "What's your favorite weather for a walk?",
+    question: "Close your eyes. What scent fills the air?",
     options: [
-      { text: "Hot and tropical", tags: ["Fruity", "Fresh", "Sweet"] },
-      { text: "Crisp, cold winter air", tags: ["Cooling", "Clean", "Astringent"] },
-      { text: "Misty and mysterious", tags: ["Earthy", "Umami", "Delicate"] },
-      { text: "Golden afternoon sun", tags: ["Floral", "Honey", "Light"] },
-      { text: "A stormy, dark sky", tags: ["Smoky", "Bold", "Rich"] }
+      { text: "A crackling wood fire", tags: ["Smoky", "Bold", "Roasted"] },
+      { text: "Blooming jasmine on a breeze", tags: ["Floral", "Delicate", "Fresh", "Light"] },
+      { text: "Damp earth after rain", tags: ["Earthy", "Umami", "Astringent", "Bold"] },
+      { text: "Caramelizing sugar", tags: ["Sweet", "Rich", "Honey"] },
+      { text: "Freshly cut grass", tags: ["Grassy", "Fresh", "Clean", "Light"] }
     ]
   },
   {
     id: 8,
-    question: "Pick a vacation destination:",
+    question: "How do you like a meal to finish?",
     options: [
-      { text: "A bustling spice market", tags: ["Spicy", "Bold", "Rich"] },
-      { text: "A serene alpine meadow", tags: ["Floral", "Delicate", "Light"] },
-      { text: "A rugged coastal cliff", tags: ["Mineral", "Astringent", "Clean"] },
-      { text: "A cozy mountain cabin", tags: ["Smoky", "Roasted", "Rich"] },
-      { text: "A lush, green rainforest", tags: ["Grassy", "Fresh", "Umami"] }
+      { text: "A clean, vegetal snap", tags: ["Grassy", "Clean", "Astringent", "Fresh"] },
+      { text: "A lingering, silky sweetness", tags: ["Sweet", "Delicate", "Light", "Honey"] },
+      { text: "A warm, roasted embrace", tags: ["Roasted", "Rich", "Bold"] },
+      { text: "A deep, earthy depth", tags: ["Earthy", "Bold", "Rich"] },
+      { text: "A bright, fruity zing", tags: ["Fruity", "Sweet", "Clean", "Fresh"] }
     ]
   },
   {
     id: 9,
-    question: "Which fruit do you crave most?",
+    question: "Pick a vacation destination:",
     options: [
-      { text: "Dark, ripe cherries", tags: ["Rich", "Sweet", "Fruity"] },
-      { text: "Tart green apples", tags: ["Astringent", "Clean", "Fresh"] },
-      { text: "Creamy white peaches", tags: ["Floral", "Sweet", "Delicate"] },
-      { text: "Exotic lychee or mango", tags: ["Fruity", "Honey", "Fresh"] },
-      { text: "Sun-dried figs", tags: ["Earthy", "Rich", "Sweet"] }
+      { text: "A bustling spice market", tags: ["Spicy", "Bold", "Rich", "Earthy"] },
+      { text: "A serene alpine meadow", tags: ["Floral", "Delicate", "Light", "Fresh"] },
+      { text: "A rugged coastal cliff", tags: ["Mineral", "Astringent", "Clean", "Fresh"] },
+      { text: "An antique wooden library", tags: ["Malty", "Rich", "Earthy"] },
+      { text: "A lush, green rainforest", tags: ["Grassy", "Fresh", "Umami", "Bold"] }
     ]
   },
   {
     id: 10,
     question: "What's your preferred level of intensity?",
     options: [
-      { text: "Soft and whisper-light", tags: ["Delicate", "Light", "Floral"] },
-      { text: "Bright and energetic", tags: ["Fresh", "Clean", "Astringent"] },
-      { text: "Balanced and harmonious", tags: ["Sweet", "Umami", "Honey"] },
-      { text: "Strong and assertive", tags: ["Bold", "Smoky", "Roasted"] },
-      { text: "Deep and meditative", tags: ["Earthy", "Rich", "Savory"] }
+      { text: "Soft and whisper-light", tags: ["Delicate", "Light", "Floral", "Fresh"] },
+      { text: "Cool and deeply refreshing", tags: ["Cooling", "Clean", "Astringent", "Sweet"] },
+      { text: "Rich, broth-like, and meditative", tags: ["Savory", "Umami", "Rich", "Earthy"] },
+      { text: "Strong, assertive, and malty", tags: ["Malty", "Bold", "Rich", "Roasted"] },
+      { text: "Wild, smoky, and untamed", tags: ["Smoky", "Bold", "Earthy"] }
     ]
   }
 ];
 
 export default function TeaQuiz() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [history, setHistory] = useState([teaData]);
+  const [teaScores, setTeaScores] = useState(
+    teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {})
+  );
+  const [history, setHistory] = useState([teaData.map(t => t.id)]);
   const [result, setResult] = useState(null);
 
-  // currentPool is the last item in history
-  const currentPool = history[history.length - 1];
+  const currentPoolIds = history[history.length - 1];
 
   const handleAnswer = (selectedTags) => {
-    // Elimination Logic: Keep teas that have AT LEAST ONE of the selected tags
-    // Or, more strictly: Keep teas where tags overlap.
-    // Let's go with: Keep if tea.tags share any element with selectedTags
-    const nextPool = currentPool.filter(tea => 
-      tea.tags.some(tag => selectedTags.includes(tag))
-    );
+    // 1. Calculate Weighted Scores for all 140 teas
+    const newScores = { ...teaScores };
+    teaData.forEach(tea => {
+      const matches = tea.tags.filter(tag => selectedTags.includes(tag));
+      matches.forEach(tag => {
+        // Apply Anchor weighting (2) vs Structural weighting (1)
+        newScores[tea.id] += TAG_WEIGHTS[tag] || 1; 
+      });
+    });
+    setTeaScores(newScores);
 
-    // If nextPool is empty (too restrictive), we keep the current pool but record the choice
-    // for a "fallback" or just proceed with the current pool to avoid 0 results.
-    const finalNextPool = nextPool.length > 0 ? nextPool : currentPool;
+    // 2. Dynamic Threshold Pruning (Claude & Gemini Consensus)
+    // Find the current leader in the pool to set the pace.
+    const currentMaxScore = Math.max(...currentPoolIds.map(id => newScores[id]));
+    
+    // Threshold: Teas must maintain at least 40% of the leader's score.
+    // This allows the curve to "breathe" based on user consistency.
+    const dynamicThreshold = currentMaxScore * 0.40;
 
-    const newHistory = [...history, finalNextPool];
+    let nextPoolIds = currentPoolIds.filter(id => newScores[id] >= dynamicThreshold);
+
+    // 3. The Sanctuary Floor
+    // Ensure we never prune so aggressively that the journey ends too early.
+    if (nextPoolIds.length < 12) {
+      nextPoolIds = [...currentPoolIds]
+        .sort((a, b) => newScores[b] - newScores[a])
+        .slice(0, Math.min(currentPoolIds.length, 12));
+    } else {
+      nextPoolIds.sort((a, b) => newScores[b] - newScores[a]);
+    }
+
+    const newHistory = [...history, nextPoolIds];
     setHistory(newHistory);
 
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      setResult(finalNextPool);
+      const finalTeas = teaData
+        .filter(t => nextPoolIds.includes(t.id))
+        .sort((a, b) => newScores[b] - newScores[a]);
+      setResult(finalTeas);
     }
   };
 
@@ -154,7 +207,8 @@ export default function TeaQuiz() {
 
   const resetQuiz = () => {
     setCurrentStep(0);
-    setHistory([teaData]);
+    setTeaScores(teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {}));
+    setHistory([teaData.map(t => t.id)]);
     setResult(null);
   };
 
@@ -177,27 +231,27 @@ export default function TeaQuiz() {
               >
                 ← Back
               </button>
-              <span className="text-xs uppercase tracking-widest text-cream/40">
-                Question {currentStep + 1} of {questions.length}
+              <span className="text-xs uppercase tracking-widest text-cream/40 font-body">
+                Step {currentStep + 1} of {questions.length}
               </span>
-              <div className="w-10" /> {/* Spacer */}
+              <div className="w-10" />
             </div>
 
             <div className="text-center space-y-2">
-              <h2 className="text-3xl font-serif text-cream">{questions[currentStep].question}</h2>
-              <p className="text-cream/30 text-sm">
-                Remaining possibilities: {currentPool.length}
+              <h2 className="text-3xl md:text-4xl font-serif text-cream leading-tight">{questions[currentStep].question}</h2>
+              <p className="text-cream/30 text-sm font-body tracking-widest uppercase">
+                Potential matches: {currentPoolIds.length}
               </p>
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid gap-3">
               {questions[currentStep].options.map((option, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleAnswer(option.tags)}
-                  className="w-full text-left p-5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
+                  className="w-full text-left p-4 md:p-5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group"
                 >
-                  <span className="text-lg font-body text-cream/80 group-hover:text-cream">
+                  <span className="text-lg font-body text-cream/70 group-hover:text-cream transition-colors">
                     {option.text}
                   </span>
                 </button>
@@ -211,27 +265,27 @@ export default function TeaQuiz() {
             className="space-y-12"
           >
             <div className="text-center space-y-4">
-              <h2 className="text-4xl font-serif text-cream">Your Curated Selection</h2>
-              <p className="text-cream/40">Based on your palette, these {result.length} teas remain:</p>
+              <h2 className="text-4xl md:text-5xl font-serif text-cream">Your Personal Sanctuary</h2>
+              <p className="text-cream/40 font-body">We've discovered {result.length} teas that align with your palette:</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
               {result.map((tea) => (
                 <div 
                   key={tea.id}
-                  className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all"
+                  className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all group"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-serif text-cream">{tea.name}</h3>
-                    <span className="text-[10px] uppercase tracking-tighter px-2 py-1 rounded bg-cream/10 text-cream/60">
+                    <h3 className="text-xl font-serif text-cream group-hover:text-white transition-colors">{tea.name}</h3>
+                    <span className="text-[10px] uppercase tracking-widest px-2 py-1 rounded bg-cream/10 text-cream/60 font-body">
                       {tea.type}
                     </span>
                   </div>
-                  <p className="text-sm text-cream/40 mb-4">{tea.notes}</p>
+                  <p className="text-sm text-cream/40 mb-4 italic font-body">"{tea.notes}"</p>
                   <div className="flex flex-wrap gap-2">
                     {tea.tags.map(tag => (
-                      <span key={tag} className="text-[10px] text-cream/30 border border-cream/10 px-2 py-0.5 rounded-full">
-                        #{tag}
+                      <span key={tag} className="text-[9px] text-cream/30 border border-cream/10 px-2 py-0.5 rounded-full uppercase tracking-widest font-body">
+                        {tag}
                       </span>
                     ))}
                   </div>
@@ -239,12 +293,12 @@ export default function TeaQuiz() {
               ))}
             </div>
 
-            <div className="text-center">
+            <div className="text-center pb-8">
               <button
                 onClick={resetQuiz}
-                className="px-12 py-4 rounded-full bg-cream text-deep-green font-bold hover:bg-white transition-all duration-300 shadow-xl"
+                className="px-12 py-4 rounded-full bg-cream text-[#062c16] font-bold hover:bg-white transition-all duration-300 shadow-xl uppercase tracking-widest text-sm font-body"
               >
-                Start a New Journey
+                Reset Journey
               </button>
             </div>
           </motion.div>

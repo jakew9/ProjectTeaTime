@@ -1,0 +1,25 @@
+USER A (Bold/Smoky/Rich/Roasted):
+Step 1: Pool size 108
+Step 2: Pool size 84
+Step 3: Pool size 65
+Step 4: Pool size 51
+Step 5: Pool size 40
+Step 6: Pool size 31
+Step 7: Pool size 24
+Step 8: Pool size 19
+Step 9: Pool size 15
+Step 10: Pool size 12
+Final Teas: Aged White Tea (2014) (Score: 29), Hojicha (Score: 29), Da Hong Pao (Score: 33), Charcoal Roasted Oolong (Score: 33), Aged Oolong (10 Year) (Score: 28), Black Oolong (Score: 28), Lapsang Souchong (Score: 29), Wild Black Tea (Score: 28), Kyoto Black (Score: 29), Lao Banzhang Raw (Score: 25), 7581 Ripe Brick (Score: 29), Dandelion Root (Score: 28)
+
+USER B (Floral/Delicate/Light/Fresh):
+Step 1: Pool size 108
+Step 2: Pool size 84
+Step 3: Pool size 65
+Step 4: Pool size 51
+Step 5: Pool size 40
+Step 6: Pool size 31
+Step 7: Pool size 24
+Step 8: Pool size 19
+Step 9: Pool size 15
+Step 10: Pool size 12
+Final Teas: Silver Needle (Score: 31), White Peony (Score: 36), Jasmine Silver Needle (Score: 27), Taiwan White (Score: 27), Huangshan Mao Feng (Score: 28), Jasmine Pearls (Score: 27), Taiping Houkui (Score: 26), Four Springs Oolong (Score: 28), Li Shan (Score: 27), Wild Purple White (Score: 32), Chamomile (Score: 29), Rose Buds (Score: 29)
