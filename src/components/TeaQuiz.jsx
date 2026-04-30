@@ -183,18 +183,17 @@ export default function TeaQuiz() {
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      let totalUserEnthusiasm = 0;
+      newUserTags.forEach(tag => {
+        totalUserEnthusiasm += TAG_WEIGHTS[tag] || 1;
+      });
+
       const finalTeas = teaData
         .filter(t => nextPoolIds.includes(t.id))
         .map(tea => {
-          let teaIdealScore = 0;
-          const intersectedTags = tea.tags.filter(tag => newUserTags.includes(tag));
-          intersectedTags.forEach(tag => {
-            teaIdealScore += TAG_WEIGHTS[tag] || 1;
-          });
-          
           return {
             ...tea,
-            matchPercent: teaIdealScore === 0 ? 0 : Math.round((newScores[tea.id] / teaIdealScore) * 100)
+            matchPercent: totalUserEnthusiasm === 0 ? 0 : Math.round((newScores[tea.id] / totalUserEnthusiasm) * 100)
           };
         })
         .sort((a, b) => b.matchPercent - a.matchPercent);
