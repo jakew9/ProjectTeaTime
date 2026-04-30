@@ -197,6 +197,12 @@ export default function TeaQuiz() {
           };
         })
         .sort((a, b) => b.matchPercent - a.matchPercent);
+
+      const topScore = finalTeas.length > 0 ? finalTeas[0].matchPercent : 0;
+      finalTeas.forEach(tea => {
+        tea.matchPercent = topScore === 0 ? 0 : Math.round((tea.matchPercent / topScore) * 100);
+      });
+
       setResult(finalTeas);
     }
   };
