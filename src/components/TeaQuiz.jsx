@@ -3,31 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import teaData from '../data/teaData.json';
 
 const TAG_WEIGHTS = {
-  // Anchor Tags: Polarizing or identity-defining (Score: 2)
-  "Smoky": 2,
-  "Umami": 2,
-  "Mineral": 2,
-  "Cooling": 2,
-  "Spicy": 2,
-  "Grassy": 2,
-  "Malty": 2,
-  "Roasted": 2,
-  
-  // Structural Tags: Supporting texture and body (Score: 1)
-  "Bold": 1,
-  "Clean": 1,
-  "Fresh": 1,
-  "Light": 1,
-  "Delicate": 1,
-  "Floral": 1,
-  "Sweet": 1,
-  "Honey": 1,
-  "Rich": 1,
-  "Creamy": 1,
-  "Earthy": 1,
-  "Savory": 1,
-  "Astringent": 1,
-  "Fruity": 1
+  "Smoky": 2.5, "Umami": 2, "Mineral": 2, "Cooling": 2, "Spicy": 2,
+  "Roasted": 1.5, "Malty": 1.5, "Honey": 1.5, "Creamy": 1.5, "Floral": 1.5,
+  "Bold": 1, "Delicate": 1, "Light": 1, "Rich": 1, "Sweet": 1,
+  "Earthy": 1, "Fruity": 1, "Fresh": 1, "Clean": 1, "Grassy": 1, "Savory": 1,
+  "Astringent": 0.75
 };
 
 const questions = [
@@ -44,24 +24,24 @@ const questions = [
   },
   {
     id: 2,
-    question: "What's your favorite weather for a walk?",
+    question: "When you reach for tea, you want it to...",
     options: [
-      { text: "Hot and tropical", tags: ["Fruity", "Fresh", "Sweet", "Floral"] },
-      { text: "Crisp, cold winter air", tags: ["Clean", "Astringent", "Bold"] },
-      { text: "Misty and mysterious", tags: ["Earthy", "Delicate", "Rich"] },
-      { text: "Golden afternoon sun", tags: ["Floral", "Honey", "Light", "Sweet"] },
-      { text: "A stormy, dark sky", tags: ["Bold", "Rich", "Earthy"] }
+      { text: "Wake you up sharply", tags: ["Bold", "Malty", "Rich"] },
+      { text: "Provide steady focus", tags: ["Fresh", "Grassy", "Umami", "Clean"] },
+      { text: "Calm and ground you", tags: ["Earthy", "Rich", "Roasted"] },
+      { text: "Be purely about flavor", tags: ["Floral", "Delicate", "Sweet", "Honey"] },
+      { text: "Cool and refresh", tags: ["Cooling", "Mineral", "Clean", "Fresh"] }
     ]
   },
   {
     id: 3,
-    question: "Which texture do you find most satisfying?",
+    question: "How do you take your coffee (or morning drink)?",
     options: [
-      { text: "Velvety and mouth-coating", tags: ["Rich", "Creamy", "Sweet"] },
-      { text: "Crisp and effervescent", tags: ["Clean", "Astringent", "Fresh", "Light"] },
-      { text: "Light and airy", tags: ["Delicate", "Light", "Floral", "Fresh"] },
-      { text: "Robust and thick", tags: ["Bold", "Earthy", "Rich"] },
-      { text: "Smooth and restorative", tags: ["Sweet", "Fresh", "Clean"] }
+      { text: "Black, no sugar", tags: ["Bold", "Astringent", "Earthy"] },
+      { text: "Splash of milk, no sugar", tags: ["Creamy", "Rich", "Clean"] },
+      { text: "Cream and sugar", tags: ["Sweet", "Creamy", "Honey", "Rich"] },
+      { text: "Herbal / no caffeine for me", tags: ["Floral", "Delicate", "Sweet", "Fresh"] },
+      { text: "Strong espresso, unsweetened", tags: ["Smoky", "Bold", "Roasted"] }
     ]
   },
   {
@@ -145,26 +125,20 @@ const questions = [
 
 export default function TeaQuiz() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [teaScores, setTeaScores] = useState(
-    teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {})
-  );
-  const [maxPossibleScore, setMaxPossibleScore] = useState(0);
-  const [history, setHistory] = useState([{ pool: teaData.map(t => t.id), maxScore: 0 }]);
+  const [history, setHistory] = useState([{ 
+    pool: teaData.map(t => t.id), 
+    scores: teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {}),
+    userTags: [] 
+  }]);
   const [result, setResult] = useState(null);
 
-  const currentPoolIds = history[history.length - 1].pool;
+  const currentState = history[history.length - 1];
+  const { pool: currentPoolIds, scores: teaScores, userTags: currentUserTags } = currentState;
 
   const handleAnswer = (selectedTags) => {
-    // 1. Calculate Weighted Scores and track potential max
+    // 1. Calculate Weighted Scores
     const newScores = { ...teaScores };
-    let questionMax = 0;
-    
-    selectedTags.forEach(tag => {
-      questionMax += TAG_WEIGHTS[tag] || 1;
-    });
-
-    const newMaxPossible = maxPossibleScore + questionMax;
-    setMaxPossibleScore(newMaxPossible);
+    const newUserTags = [...currentUserTags, ...selectedTags];
 
     teaData.forEach(tea => {
       const matches = tea.tags.filter(tag => selectedTags.includes(tag));
@@ -172,13 +146,27 @@ export default function TeaQuiz() {
         newScores[tea.id] += TAG_WEIGHTS[tag] || 1; 
       });
     });
-    setTeaScores(newScores);
 
-    // 2. Dynamic Threshold Pruning
-    const currentMaxScore = Math.max(...currentPoolIds.map(id => newScores[id]));
-    const dynamicThreshold = currentMaxScore * 0.40;
+    // 2. Dynamic Threshold Pruning (Consensus Fix 4)
+    // Compute roundDelta and blendedScore for pruning
+    const roundDelta = {};
+    const blendedScores = {};
+    
+    currentPoolIds.forEach(id => {
+      const tea = teaData.find(t => t.id === id);
+      const matches = tea.tags.filter(tag => selectedTags.includes(tag));
+      let delta = 0;
+      matches.forEach(tag => {
+        delta += TAG_WEIGHTS[tag] || 1;
+      });
+      roundDelta[id] = delta;
+      blendedScores[id] = (0.6 * newScores[id]) + (0.4 * delta);
+    });
 
-    let nextPoolIds = currentPoolIds.filter(id => newScores[id] >= dynamicThreshold);
+    const maxBlended = Math.max(...currentPoolIds.map(id => blendedScores[id]));
+    const dynamicThreshold = maxBlended * 0.50;
+
+    let nextPoolIds = currentPoolIds.filter(id => blendedScores[id] >= dynamicThreshold);
 
     if (nextPoolIds.length < 12) {
       nextPoolIds = [...currentPoolIds]
@@ -188,7 +176,8 @@ export default function TeaQuiz() {
       nextPoolIds.sort((a, b) => newScores[b] - newScores[a]);
     }
 
-    const newHistory = [...history, { pool: nextPoolIds, maxScore: newMaxPossible }];
+    const nextState = { pool: nextPoolIds, scores: newScores, userTags: newUserTags };
+    const newHistory = [...history, nextState];
     setHistory(newHistory);
 
     if (currentStep < questions.length - 1) {
@@ -196,10 +185,18 @@ export default function TeaQuiz() {
     } else {
       const finalTeas = teaData
         .filter(t => nextPoolIds.includes(t.id))
-        .map(tea => ({
-          ...tea,
-          matchPercent: Math.round((newScores[tea.id] / newMaxPossible) * 100)
-        }))
+        .map(tea => {
+          let teaIdealScore = 0;
+          const intersectedTags = tea.tags.filter(tag => newUserTags.includes(tag));
+          intersectedTags.forEach(tag => {
+            teaIdealScore += TAG_WEIGHTS[tag] || 1;
+          });
+          
+          return {
+            ...tea,
+            matchPercent: teaIdealScore === 0 ? 0 : Math.round((newScores[tea.id] / teaIdealScore) * 100)
+          };
+        })
         .sort((a, b) => b.matchPercent - a.matchPercent);
       setResult(finalTeas);
     }
@@ -207,18 +204,18 @@ export default function TeaQuiz() {
 
   const handleBack = () => {
     if (currentStep > 0) {
-      const previousState = history[history.length - 2];
       setCurrentStep(currentStep - 1);
-      setMaxPossibleScore(previousState.maxScore);
       setHistory(history.slice(0, -1));
     }
   };
 
   const resetQuiz = () => {
     setCurrentStep(0);
-    setTeaScores(teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {}));
-    setMaxPossibleScore(0);
-    setHistory([{ pool: teaData.map(t => t.id), maxScore: 0 }]);
+    setHistory([{ 
+      pool: teaData.map(t => t.id), 
+      scores: teaData.reduce((acc, tea) => ({ ...acc, [tea.id]: 0 }), {}),
+      userTags: [] 
+    }]);
     setResult(null);
   };
 
@@ -300,6 +297,17 @@ export default function TeaQuiz() {
                     <h3 className="text-lg font-serif text-cream mb-1 leading-tight">{tea.name}</h3>
                     <p className="text-[10px] uppercase tracking-widest text-cream/40 mb-3">{tea.type}</p>
                     <p className="text-xs text-cream/60 italic leading-relaxed">"{tea.notes}"</p>
+                    {(() => {
+                      const matchedTags = tea.tags
+                        .filter(tag => currentUserTags.includes(tag))
+                        .sort((a, b) => (TAG_WEIGHTS[b] || 1) - (TAG_WEIGHTS[a] || 1) || a.localeCompare(b))
+                        .slice(0, 3);
+                      return matchedTags.length > 0 && (
+                        <p className="text-[10px] text-cream/40 mt-3 font-body">
+                          Matched on: {matchedTags.join(', ')}
+                        </p>
+                      );
+                    })()}
                   </div>
                 ))}
               </div>
